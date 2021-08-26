@@ -7,15 +7,23 @@ const customers = []
 
 app.use(express.json());
 
-app.post("/account", (request, response) => {
-  const { cpf, name } = request.body;
+app.get("/statement/:cpf", (req, res) => {
+  const { cpf } = req.params;
+
+  const customer = customers.find(customer => customer.cpf === cpf)
+
+  return res.json(customer.statement)
+})
+
+app.post("/account", (req, res) => {
+  const { cpf, name } = req.body;
 
   const customerAlreadyExists = customers.some(
     (customer) => customer.cpf === cpf
   )
 
   if (customerAlreadyExists) {
-    return response.status(400).json({ error: "Customer already exists!" })
+    return res.status(400).json({ error: "Customer already exists!" })
   }
 
   customers.push({
@@ -25,7 +33,7 @@ app.post("/account", (request, response) => {
     statement: [],
   })
 
-  return response.status(201).send()
+  return res.status(201).send()
 })
 
 app.listen(3333)
