@@ -120,6 +120,21 @@ app.get("/account", verifyIfExistsAccountCPF, (request, response) => {
   return response.json(customer)
 })
 
+app.delete("/account", verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request
+
+  customers.splice(customer, 1)
+
+  return response.status(201).json(customers)
+})
+
+app.get("/balance", verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request
+
+  const balance = getBalance(customer.statement)
+
+  return response.json(balance)
+})
 
 //server
 app.listen(3333)
